@@ -17,7 +17,7 @@
       ]
     }
   },
-  "postCreateCommand": "corepack enable && pnpm install",
+  "postCreateCommand": "corepack enable && pnpm install && npm install -g @anthropic-ai/claude-code",
   "forwardPorts": [3000, 5432],
   "portsAttributes": {
     "3000": {
