@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a Payload CMS 3.x application using Next.js 15, React 19, PostgreSQL, and TypeScript. Payload is a headless CMS that provides an admin panel at `/admin` and a REST/GraphQL API.
 
+The frontend uses [Mantine](https://mantine.dev/) as the UI component library.
+
 ## Dev Container Setup
 
 The project includes a dev container configuration with PostgreSQL. To use it:
@@ -751,3 +753,17 @@ export const myPlugin = (options: { collections?: string[] }): Plugin =>
 - LLM Context: https://payloadcms.com/llms-full.txt
 - GitHub: https://github.com/payloadcms/payload
 - Examples: https://github.com/payloadcms/payload/tree/main/examples
+
+---
+
+## Mantine UI
+
+The frontend uses Mantine for UI components. Mantine is configured in:
+- `postcss.config.mjs` - PostCSS configuration with Mantine preset
+- `src/app/(frontend)/providers.tsx` - MantineProvider with theme configuration
+- `src/app/(frontend)/layout.tsx` - Imports Mantine CSS and wraps app in providers
+
+### Resources
+
+- Docs: https://mantine.dev/
+- LLM Context: https://mantine.dev/llms-full.txt
