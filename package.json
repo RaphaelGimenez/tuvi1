@@ -18,6 +18,9 @@
     "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
   },
   "dependencies": {
+    "@mantine/core": "^8.3.12",
+    "@mantine/hooks": "^8.3.12",
+    "@payloadcms/db-postgres": "3.71.1",
     "@payloadcms/next": "3.71.1",
     "@payloadcms/richtext-lexical": "3.71.1",
     "@payloadcms/ui": "3.71.1",
@@ -28,8 +31,7 @@
     "payload": "3.71.1",
     "react": "19.2.1",
     "react-dom": "19.2.1",
-    "sharp": "0.34.2",
-    "@payloadcms/db-postgres": "3.71.1"
+    "sharp": "0.34.2"
   },
   "devDependencies": {
     "@playwright/test": "1.56.1",
@@ -43,6 +45,9 @@
     "jsdom": "26.1.0",
     "playwright": "1.56.1",
     "playwright-core": "1.56.1",
+    "postcss": "^8.5.6",
+    "postcss-preset-mantine": "^1.18.0",
+    "postcss-simple-vars": "^7.0.1",
     "prettier": "^3.4.2",
     "typescript": "5.7.3",
     "vite-tsconfig-paths": "5.1.4",
