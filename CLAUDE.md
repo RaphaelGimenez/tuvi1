@@ -120,6 +120,67 @@ hooks: {
 3. Use `tsc --noEmit` to validate TypeScript after code changes
 4. Component paths in config are file paths (not imports) relative to `src/`
 
+## PostgreSQL Migration Workflow
+
+Payload uses Drizzle ORM with PostgreSQL. In development, schema changes are automatically pushed to the database. For production, migrations must be created and committed.
+
+### Migration Commands
+
+```bash
+pnpm payload migrate              # Run pending migrations
+pnpm payload migrate:create       # Create migration from schema diff
+pnpm payload migrate:status       # Check migration status
+pnpm payload migrate:down         # Roll back last batch
+pnpm payload migrate:refresh      # Roll back all and re-run
+pnpm payload migrate:reset        # Roll back all migrations
+pnpm payload migrate:fresh        # Drop all tables and re-run migrations
+```
+
+### Development Mode (Push)
+
+During development, Payload automatically syncs schema changes to the database using Drizzle's "push" mode. No manual migration steps needed while developing locally.
+
+### Creating Migrations Before Committing
+
+**IMPORTANT**: When you modify collection schemas (add/remove/change fields, create new collections, etc.), you MUST create a migration before committing:
+
+1. **Make schema changes** in collection configs
+2. **Run `pnpm generate:types`** to update TypeScript types
+3. **Run `pnpm payload migrate:create`** to generate migration file
+4. **Review the generated migration** in `src/migrations/`
+5. **Commit both** the schema changes AND the migration file together
+
+```bash
+# Example workflow after adding a field to Posts collection
+pnpm generate:types
+pnpm payload migrate:create
+# Review src/migrations/YYYYMMDD_HHMMSS_migration.ts
+git add src/collections/Posts.ts src/migrations/ src/payload-types.ts
+git commit -m "feat(posts): add featured image field"
+```
+
+### Migration File Location
+
+Migrations are stored in `src/migrations/`. Each migration has:
+- `up()` function: Applied when migrating forward
+- `down()` function: Applied when rolling back
+
+### Production Deployment
+
+In production, migrations run automatically on startup or via CI:
+```bash
+# In CI/CD pipeline or Dockerfile
+pnpm payload migrate && pnpm build
+```
+
+### Rules for Claude
+
+When implementing changes that modify the database schema:
+1. Always create a migration with `pnpm payload migrate:create` after schema changes
+2. Include migration files in the same commit as the schema changes
+3. Never mix push mode and migrations on the same database
+4. Review generated SQL in migration files before committing
+
 ## Git Commit Guidelines
 
 Use `/commit` command to automatically commit all changes following these rules.
