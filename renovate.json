@@ -1,0 +1,34 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "packageRules": [
+    {
+      "description": "Group Payload CMS packages together",
+      "groupName": "Payload CMS",
+      "matchPackagePatterns": ["^@payloadcms/", "^payload$"]
+    },
+    {
+      "description": "Group Next.js related packages",
+      "groupName": "Next.js",
+      "matchPackagePatterns": ["^next", "^@next/"]
+    },
+    {
+      "description": "Group testing packages",
+      "groupName": "testing",
+      "matchPackagePatterns": ["^@playwright/", "^playwright", "^vitest", "^@vitest/"]
+    },
+    {
+      "description": "Automerge minor and patch updates for non-major versions",
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true
+    }
+  ],
+  "schedule": ["before 6am on Monday"],
+  "timezone": "UTC",
+  "prConcurrentLimit": 10,
+  "prHourlyLimit": 0,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am on the first day of the month"]
+  }
+}
