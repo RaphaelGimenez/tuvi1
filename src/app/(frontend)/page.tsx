@@ -12,7 +12,11 @@ import {
   SimpleGrid,
   ThemeIcon,
   Anchor,
+  ActionIcon,
+  Center,
+  Flex,
 } from '@mantine/core'
+import { IconBrandGithub } from '@tabler/icons-react'
 
 import config from '@/payload.config'
 
@@ -85,11 +89,32 @@ export default async function HomePage() {
           </Paper>
         </SimpleGrid>
 
-        <Text ta="center" size="sm" c="dimmed" mt="xl">
-          <Anchor href={payloadConfig.routes?.admin || '/admin'} c="dimmed" component={Link}>
+        <Group justify="center" gap="md" mt="xl">
+          <Anchor
+            href={payloadConfig.routes?.admin || '/admin'}
+            c="dimmed"
+            component={Link}
+            size="sm"
+          >
             Panneau d&apos;administration
           </Anchor>
-        </Text>
+          <Text size="sm" c="dimmed">
+            •
+          </Text>
+          <Anchor
+            href="https://github.com/RaphaelGimenez/tuvi1"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub repository"
+            c="dimmed"
+            size="sm"
+          >
+            <Flex align="center" gap="xs">
+              <IconBrandGithub size={16} />
+              Voir sur GitHub
+            </Flex>
+          </Anchor>
+        </Group>
       </Stack>
     </Container>
   )
