@@ -11,14 +11,10 @@ import {
   Paper,
   SimpleGrid,
   ThemeIcon,
+  Anchor,
 } from '@mantine/core'
 
 import config from '@/payload.config'
-
-export const metadata = {
-  title: 'Event Scheduler',
-  description: 'Find the best time for your group events',
-}
 
 export default async function HomePage() {
   const headers = await getHeaders()
@@ -31,38 +27,24 @@ export default async function HomePage() {
       <Stack gap="xl">
         <div style={{ textAlign: 'center' }}>
           <Title order={1} mb="sm">
-            Event Scheduler
+            Find the Best Time
           </Title>
           <Text size="lg" c="dimmed" maw={500} mx="auto">
-            Find the best time for your group events. Create an event, share the link, and let
-            participants vote on their availability.
+            Create an event, share the link, and let participants vote on their availability.
           </Text>
         </div>
 
         <Group justify="center" gap="md">
           {user ? (
-            <>
-              <Button component={Link} href="/events/new" size="lg">
-                Create Event
-              </Button>
-              <Button component={Link} href="/events" variant="light" size="lg">
-                My Events
-              </Button>
-            </>
+            <Button component={Link} href="/events/new" size="lg">
+              Create Event
+            </Button>
           ) : (
-            <>
-              <Button component={Link} href="/login" size="lg">
-                Sign In to Create Event
-              </Button>
-            </>
+            <Button component={Link} href="/login" size="lg">
+              Sign In to Create Event
+            </Button>
           )}
         </Group>
-
-        {user && (
-          <Text ta="center" c="dimmed">
-            Welcome back, {user.email}
-          </Text>
-        )}
 
         <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="lg" mt="xl">
           <Paper p="lg" withBorder>
@@ -103,9 +85,9 @@ export default async function HomePage() {
         </SimpleGrid>
 
         <Text ta="center" size="sm" c="dimmed" mt="xl">
-          <Link href={payloadConfig.routes?.admin || '/admin'} style={{ color: 'inherit' }}>
+          <Anchor href={payloadConfig.routes?.admin || '/admin'} c="dimmed">
             Admin Panel
-          </Link>
+          </Anchor>
         </Text>
       </Stack>
     </Container>
