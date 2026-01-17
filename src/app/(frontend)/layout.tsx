@@ -2,6 +2,7 @@ import { ColorSchemeScript } from '@mantine/core'
 import React from 'react'
 
 import '@mantine/core/styles.css'
+import '@mantine/dates/styles.css'
 import './styles.css'
 
 import { Providers } from './providers'
