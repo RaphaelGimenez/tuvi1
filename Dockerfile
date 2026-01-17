@@ -30,10 +30,17 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
+# Database connection for migrations (passed as build args)
+ARG DATABASE_URL
+ARG PAYLOAD_SECRET
+ENV DATABASE_URL=${DATABASE_URL}
+ENV PAYLOAD_SECRET=${PAYLOAD_SECRET}
+
+# Run migrations and build
 RUN \
-  if [ -f yarn.lock ]; then yarn run build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build; \
+  if [ -f yarn.lock ]; then yarn payload migrate && yarn run build; \
+  elif [ -f package-lock.json ]; then npm run payload migrate && npm run build; \
+  elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm payload migrate && pnpm run build; \
   else echo "Lockfile not found." && exit 1; \
   fi
 

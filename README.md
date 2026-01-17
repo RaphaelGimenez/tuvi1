@@ -68,17 +68,6 @@ That's it! The Docker instance will help you get up and running quickly while al
 
 To deploy this application on [Coolify](https://coolify.io/), follow these steps:
 
-### Prerequisites
-
-Add `output: 'standalone'` to your `next.config.mjs`:
-
-```js
-const nextConfig = {
-  output: 'standalone',
-  // ... rest of config
-}
-```
-
 ### Step 1: Create PostgreSQL Database
 
 1. In Coolify, go to **Resources** → **New** → **Database** → **PostgreSQL**
@@ -97,23 +86,37 @@ const nextConfig = {
 3. Choose **Dockerfile** as the build pack
 4. Set the Dockerfile path to `Dockerfile`
 
-### Step 3: Configure Environment Variables
+### Step 3: Configure Build Arguments
 
-| Variable | Value |
-|----------|-------|
+Database migrations run during the Docker build, so you need to configure build arguments:
+
+1. Go to your application's **Settings** → **Build**
+2. Add these **Build Arguments**:
+
+| Build Arg | Value |
+|-----------|-------|
 | `DATABASE_URL` | Internal PostgreSQL URL from Step 1 |
 | `PAYLOAD_SECRET` | Random 32+ character string (generate with `openssl rand -base64 32`) |
 
-### Step 4: Configure Networking
+### Step 4: Configure Environment Variables
+
+Add the same values as runtime environment variables:
+
+| Variable | Value |
+|----------|-------|
+| `DATABASE_URL` | Same as build arg |
+| `PAYLOAD_SECRET` | Same as build arg |
+
+### Step 5: Configure Networking
 
 1. Set the **Exposed Port** to `3000`
 2. Configure your domain/subdomain
 3. Enable HTTPS (Let's Encrypt)
 
-### Step 5: Deploy
+### Step 6: Deploy
 
 1. Click **Deploy**
-2. On first run, Payload will automatically run migrations and set up the database
+2. Migrations will run automatically during the build
 3. Access `/admin` to create your first admin user
 
 > **Note:** Ensure both the PostgreSQL database and your app are on the same Coolify network so they can communicate via the internal hostname.
