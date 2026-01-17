@@ -7,6 +7,7 @@ import config from '@/payload.config'
 import { AvailabilityMatrix } from '../../components/AvailabilityMatrix'
 import { VotingForm } from '../../components/VotingForm'
 import { ShareLink } from '../../components/ShareLink'
+import Link from 'next/link'
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -26,12 +27,12 @@ export async function generateMetadata({ params }: PageProps) {
 
   const event = docs[0]
   if (!event) {
-    return { title: 'Event Not Found' }
+    return { title: 'Événement introuvable' }
   }
 
   return {
     title: event.name,
-    description: event.description || `Vote for the best time for ${event.name}`,
+    description: event.description || `Votez pour le meilleur moment pour ${event.name}`,
   }
 }
 
@@ -71,15 +72,15 @@ export default async function VotingPage({ params, searchParams }: PageProps) {
     <Container size="lg" py="xl">
       <Stack gap="lg">
         {created === 'true' && (
-          <Alert color="green" title="Event Created!">
-            Your event has been created. Share the link below with participants.
+          <Alert color="green" title="Événement créé !">
+            Votre événement a été créé. Partagez le lien ci-dessous avec les participants.
           </Alert>
         )}
 
         <div>
           <Group gap="sm" mb="xs">
             <Title order={1}>{event.name}</Title>
-            {isClosed && <Badge color="gray">Closed</Badge>}
+            {isClosed && <Badge color="gray">Fermé</Badge>}
           </Group>
           {event.description && <Text c="dimmed">{event.description}</Text>}
         </div>
@@ -96,10 +97,15 @@ export default async function VotingPage({ params, searchParams }: PageProps) {
 
         <Text size="sm" c="dimmed">
           {user ? (
-            <Anchor href="/events">Back to my events</Anchor>
+            <Anchor href="/events" component={Link}>
+              Retour à mes événements
+            </Anchor>
           ) : (
             <>
-              Want to create your own event? <Anchor href="/login">Sign in</Anchor>
+              Vous voulez créer votre propre événement ?{' '}
+              <Anchor href="/login" component={Link}>
+                Connectez-vous
+              </Anchor>
             </>
           )}
         </Text>

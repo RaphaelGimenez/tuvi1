@@ -13,14 +13,14 @@ export function ShareLink({ slug }: ShareLinkProps) {
     <Paper p="md" withBorder>
       <Stack gap="xs">
         <Text size="sm" fw={500}>
-          Share this link with participants
+          Partagez ce lien avec les participants
         </Text>
         <Group gap="xs">
           <TextInput value={url} readOnly style={{ flex: 1 }} />
           <CopyButton value={url}>
             {({ copied, copy }) => (
               <Button color={copied ? 'green' : 'pink'} onClick={copy}>
-                {copied ? 'Copied!' : 'Copy'}
+                {copied ? 'Copié !' : 'Copier'}
               </Button>
             )}
           </CopyButton>

@@ -8,8 +8,8 @@ import dayjs from 'dayjs'
 import config from '@/payload.config'
 
 export const metadata = {
-  title: 'My Events',
-  description: 'View and manage your events',
+  title: 'Mes événements',
+  description: 'Consultez et gérez vos événements',
 }
 
 export default async function EventsPage() {
@@ -35,21 +35,21 @@ export default async function EventsPage() {
       <Stack gap="lg">
         <Group justify="space-between" align="center">
           <div>
-            <Title order={1}>My Events</Title>
-            <Text c="dimmed">Events you have created</Text>
+            <Title order={1}>Mes événements</Title>
+            <Text c="dimmed">Les événements que vous avez créés</Text>
           </div>
           <Button component={Link} href="/events/new">
-            Create Event
+            Créer un événement
           </Button>
         </Group>
 
         {events.length === 0 ? (
           <Paper p="xl" withBorder ta="center">
             <Text c="dimmed" mb="md">
-              You haven&apos;t created any events yet.
+              Vous n&apos;avez pas encore créé d&apos;événement.
             </Text>
             <Button component={Link} href="/events/new">
-              Create your first event
+              Créer votre premier événement
             </Button>
           </Paper>
         ) : (
@@ -62,7 +62,7 @@ export default async function EventsPage() {
                       <Anchor component={Link} href={`/e/${event.slug}`} fw={500}>
                         {event.name}
                       </Anchor>
-                      {event.closedAt && <Badge color="gray">Closed</Badge>}
+                      {event.closedAt && <Badge color="gray">Fermé</Badge>}
                     </Group>
                     {event.description && (
                       <Text size="sm" c="dimmed" lineClamp={2}>
@@ -70,12 +70,13 @@ export default async function EventsPage() {
                       </Text>
                     )}
                     <Text size="xs" c="dimmed" mt="xs">
-                      Created {dayjs(event.createdAt).format('MMM D, YYYY')} •{' '}
-                      {Array.isArray(event.dateOptions) ? event.dateOptions.length : 0} date options
+                      Créé le {dayjs(event.createdAt).format('D MMM YYYY')} •{' '}
+                      {Array.isArray(event.dateOptions) ? event.dateOptions.length : 0} options de
+                      date
                     </Text>
                   </div>
                   <Button component={Link} href={`/e/${event.slug}`} variant="light" size="sm">
-                    View
+                    Voir
                   </Button>
                 </Group>
               </Paper>
@@ -84,7 +85,9 @@ export default async function EventsPage() {
         )}
 
         <Text size="sm" c="dimmed">
-          <Anchor href="/">Back to home</Anchor>
+          <Anchor href="/" component={Link}>
+            Retour à l&apos;accueil
+          </Anchor>
         </Text>
       </Stack>
     </Container>

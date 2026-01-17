@@ -54,12 +54,12 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
     setError(null)
 
     if (!name.trim()) {
-      setError('Please enter your name')
+      setError('Veuillez entrer votre nom')
       return
     }
 
     if (selectedDates.length === 0) {
-      setError('Please select at least one date')
+      setError('Veuillez sélectionner au moins une date')
       return
     }
 
@@ -79,7 +79,7 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
 
       if (!res.ok) {
         const data = await res.json()
-        throw new Error(data.errors?.[0]?.message || 'Failed to submit vote')
+        throw new Error(data.errors?.[0]?.message || 'Échec de l\'envoi du vote')
       }
 
       setSuccess(true)
@@ -88,7 +88,7 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
       setSelectedDates([])
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to submit vote')
+      setError(err instanceof Error ? err.message : 'Échec de l\'envoi du vote')
     } finally {
       setLoading(false)
     }
@@ -98,7 +98,7 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
     return (
       <Paper p="md" withBorder>
         <Text c="dimmed" ta="center">
-          Voting is closed for this event.
+          Le vote est fermé pour cet événement.
         </Text>
       </Paper>
     )
@@ -108,23 +108,23 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
     <Paper p="md" withBorder>
       <form onSubmit={handleSubmit}>
         <Stack gap="md">
-          <Text fw={500}>Add Your Availability</Text>
+          <Text fw={500}>Indiquez vos disponibilités</Text>
 
           {error && (
-            <Alert color="red" title="Error">
+            <Alert color="red" title="Erreur">
               {error}
             </Alert>
           )}
 
           {success && (
-            <Alert color="green" title="Success">
-              Your response has been recorded!
+            <Alert color="green" title="Succès">
+              Votre réponse a été enregistrée !
             </Alert>
           )}
 
           <TextInput
-            label="Your Name"
-            placeholder="John Doe"
+            label="Votre nom"
+            placeholder="Jean Dupont"
             required
             maxLength={100}
             value={name}
@@ -134,10 +134,10 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
           <div>
             <Group justify="space-between" mb="xs">
               <Text size="sm" fw={500}>
-                Select dates you&apos;re available
+                Sélectionnez les dates où vous êtes disponible
               </Text>
               <Button variant="subtle" size="xs" onClick={handleSelectAll}>
-                {selectedDates.length === dateOptions.length ? 'Deselect All' : 'Select All'}
+                {selectedDates.length === dateOptions.length ? 'Tout désélectionner' : 'Tout sélectionner'}
               </Button>
             </Group>
             <Stack gap="xs">
@@ -153,8 +153,8 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
           </div>
 
           <Textarea
-            label="Comment (optional)"
-            placeholder="Any notes about your availability..."
+            label="Commentaire (optionnel)"
+            placeholder="Notes sur vos disponibilités..."
             maxLength={500}
             rows={2}
             value={comment}
@@ -162,7 +162,7 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
           />
 
           <Button type="submit" loading={loading} disabled={loading}>
-            Submit Response
+            Envoyer ma réponse
           </Button>
         </Stack>
       </form>

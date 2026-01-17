@@ -18,17 +18,17 @@ export function Header({ user }: HeaderProps) {
       <Container size="lg" py="sm">
         <Group justify="space-between">
           <Anchor component={Link} href="/" underline="never" fw={600} c="inherit">
-            Event Scheduler
+            Planificateur d&apos;événements
           </Anchor>
 
           <Group gap="md">
             {user ? (
               <>
                 <Anchor component={Link} href="/events" size="sm">
-                  My Events
+                  Mes événements
                 </Anchor>
                 <Anchor component={Link} href="/events/new" size="sm">
-                  Create Event
+                  Créer un événement
                 </Anchor>
                 <Text size="sm" c="dimmed">
                   {user.email}
@@ -36,7 +36,7 @@ export function Header({ user }: HeaderProps) {
               </>
             ) : (
               <Anchor component={Link} href="/login" size="sm">
-                Sign In
+                Connexion
               </Anchor>
             )}
             <ColorSchemeToggle />

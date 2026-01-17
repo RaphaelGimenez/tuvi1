@@ -27,21 +27,22 @@ export default async function HomePage() {
       <Stack gap="xl">
         <div style={{ textAlign: 'center' }}>
           <Title order={1} mb="sm">
-            Find the Best Time
+            Trouvez le meilleur moment
           </Title>
           <Text size="lg" c="dimmed" maw={500} mx="auto">
-            Create an event, share the link, and let participants vote on their availability.
+            Créez un événement, partagez le lien et laissez les participants voter sur leurs
+            disponibilités.
           </Text>
         </div>
 
         <Group justify="center" gap="md">
           {user ? (
             <Button component={Link} href="/events/new" size="lg">
-              Create Event
+              Créer un événement
             </Button>
           ) : (
             <Button component={Link} href="/login" size="lg">
-              Sign In to Create Event
+              Connectez-vous pour créer un événement
             </Button>
           )}
         </Group>
@@ -52,9 +53,9 @@ export default async function HomePage() {
               <ThemeIcon size="lg" variant="light" color="pink">
                 1
               </ThemeIcon>
-              <Text fw={500}>Create Event</Text>
+              <Text fw={500}>Créer un événement</Text>
               <Text size="sm" c="dimmed">
-                Set up your event with a name, description, and available date options.
+                Configurez votre événement avec un nom, une description et les dates disponibles.
               </Text>
             </Stack>
           </Paper>
@@ -64,9 +65,9 @@ export default async function HomePage() {
               <ThemeIcon size="lg" variant="light" color="grape">
                 2
               </ThemeIcon>
-              <Text fw={500}>Share Link</Text>
+              <Text fw={500}>Partager le lien</Text>
               <Text size="sm" c="dimmed">
-                Send the unique link to participants. No sign-up required to vote.
+                Envoyez le lien unique aux participants. Aucune inscription requise pour voter.
               </Text>
             </Stack>
           </Paper>
@@ -76,17 +77,17 @@ export default async function HomePage() {
               <ThemeIcon size="lg" variant="light" color="violet">
                 3
               </ThemeIcon>
-              <Text fw={500}>Find Best Time</Text>
+              <Text fw={500}>Trouver le meilleur moment</Text>
               <Text size="sm" c="dimmed">
-                View the availability matrix and pick the date that works for everyone.
+                Consultez le tableau des disponibilités et choisissez la date qui convient à tous.
               </Text>
             </Stack>
           </Paper>
         </SimpleGrid>
 
         <Text ta="center" size="sm" c="dimmed" mt="xl">
-          <Anchor href={payloadConfig.routes?.admin || '/admin'} c="dimmed">
-            Admin Panel
+          <Anchor href={payloadConfig.routes?.admin || '/admin'} c="dimmed" component={Link}>
+            Panneau d&apos;administration
           </Anchor>
         </Text>
       </Stack>

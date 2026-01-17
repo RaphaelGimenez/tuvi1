@@ -5,10 +5,11 @@ import { Container, Title, Text, Paper, Anchor, Stack } from '@mantine/core'
 
 import config from '@/payload.config'
 import { EventForm } from '../../components/EventForm'
+import Link from 'next/link'
 
 export const metadata = {
-  title: 'Create Event',
-  description: 'Create a new event for scheduling',
+  title: 'Créer un événement',
+  description: 'Créez un nouvel événement pour planifier',
 }
 
 export default async function NewEventPage() {
@@ -25,9 +26,10 @@ export default async function NewEventPage() {
     <Container size="sm" py="xl">
       <Stack gap="lg">
         <div>
-          <Title order={1}>Create Event</Title>
+          <Title order={1}>Créer un événement</Title>
           <Text c="dimmed">
-            Create a new event and share the link with participants to find the best time.
+            Créez un nouvel événement et partagez le lien avec les participants pour trouver le
+            meilleur moment.
           </Text>
         </div>
 
@@ -36,7 +38,9 @@ export default async function NewEventPage() {
         </Paper>
 
         <Text size="sm" c="dimmed">
-          <Anchor href="/events">Back to my events</Anchor>
+          <Anchor href="/events" component={Link}>
+            Retour à mes événements
+          </Anchor>
         </Text>
       </Stack>
     </Container>

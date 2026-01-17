@@ -32,12 +32,12 @@ export function EventForm() {
     setError(null)
 
     if (!name.trim()) {
-      setError('Event name is required')
+      setError('Le nom de l\'événement est requis')
       return
     }
 
     if (selectedDates.length === 0) {
-      setError('Please select at least one date')
+      setError('Veuillez sélectionner au moins une date')
       return
     }
 
@@ -61,13 +61,13 @@ export function EventForm() {
 
       if (!res.ok) {
         const data = await res.json()
-        throw new Error(data.errors?.[0]?.message || 'Failed to create event')
+        throw new Error(data.errors?.[0]?.message || 'Échec de la création de l\'événement')
       }
 
       const { doc } = await res.json()
       router.push(`/e/${doc.slug}?created=true`)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create event')
+      setError(err instanceof Error ? err.message : 'Échec de la création de l\'événement')
     } finally {
       setLoading(false)
     }
@@ -77,14 +77,14 @@ export function EventForm() {
     <form onSubmit={handleSubmit}>
       <Stack gap="md">
         {error && (
-          <Alert color="red" title="Error">
+          <Alert color="red" title="Erreur">
             {error}
           </Alert>
         )}
 
         <TextInput
-          label="Event Name"
-          placeholder="Team Lunch"
+          label="Nom de l'événement"
+          placeholder="Déjeuner d'équipe"
           required
           maxLength={200}
           value={name}
@@ -93,7 +93,7 @@ export function EventForm() {
 
         <Textarea
           label="Description"
-          placeholder="Optional description for your event"
+          placeholder="Description optionnelle de votre événement"
           maxLength={2000}
           rows={3}
           value={description}
@@ -102,7 +102,7 @@ export function EventForm() {
 
         <div>
           <Text size="sm" fw={500} mb="xs">
-            Select Available Dates
+            Sélectionnez les dates disponibles
           </Text>
           <DatePicker
             type="multiple"
@@ -113,13 +113,13 @@ export function EventForm() {
           />
           {selectedDates.length > 0 && (
             <Text size="sm" c="dimmed" mt="xs">
-              {selectedDates.length} date{selectedDates.length > 1 ? 's' : ''} selected
+              {selectedDates.length} date{selectedDates.length > 1 ? 's' : ''} sélectionnée{selectedDates.length > 1 ? 's' : ''}
             </Text>
           )}
         </div>
 
         <Button type="submit" loading={loading} disabled={loading}>
-          Create Event
+          Créer l&apos;événement
         </Button>
       </Stack>
     </form>

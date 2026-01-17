@@ -13,10 +13,10 @@ import { Header } from './components/Header'
 
 export const metadata = {
   title: {
-    default: 'Event Scheduler',
-    template: '%s | Event Scheduler',
+    default: 'Planificateur d\'événements',
+    template: '%s | Planificateur d\'événements',
   },
-  description: 'Find the best time for your group events',
+  description: 'Trouvez le meilleur moment pour vos événements de groupe',
 }
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
@@ -27,7 +27,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   const { user } = await payload.auth({ headers })
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
