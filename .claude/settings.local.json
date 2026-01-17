@@ -4,7 +4,16 @@
       "WebFetch(domain:payloadcms.com)",
       "WebFetch(domain:raw.githubusercontent.com)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(pnpm add:*)",
+      "Bash(tsc:*)",
+      "Bash(pnpm exec tsc:*)",
+      "WebFetch(domain:mantine.dev)",
+      "Bash(ls:*)",
+      "Bash(pnpm generate:types:*)",
+      "Bash(pnpm payload migrate:create:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(timeout 30 pnpm dev:*)"
     ]
   }
 }
