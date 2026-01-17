@@ -1,4 +1,6 @@
-import { Table, Text, Badge, Paper, Stack, Group } from '@mantine/core'
+'use client'
+
+import { Table, Text, Badge, Paper, Stack, Group, useComputedColorScheme } from '@mantine/core'
 import dayjs from 'dayjs'
 import type { Event, EventParticipation } from '@/payload-types'
 
@@ -8,6 +10,8 @@ interface AvailabilityMatrixProps {
 }
 
 export function AvailabilityMatrix({ event, participations }: AvailabilityMatrixProps) {
+  const colorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true })
+  const isDark = colorScheme === 'dark'
   const dateOptions = (event.dateOptions as string[]) || []
 
   if (dateOptions.length === 0) {
@@ -101,10 +105,10 @@ export function AvailabilityMatrix({ event, participations }: AvailabilityMatrix
                         <Table.Td
                           key={date}
                           ta="center"
-                          bg={isSelected ? 'teal.1' : undefined}
+                          bg={isSelected ? (isDark ? 'teal.9' : 'teal.1') : undefined}
                         >
                           {isSelected ? (
-                            <Text c="teal" fw={500}>
+                            <Text c={isDark ? 'teal.3' : 'teal.7'} fw={500}>
                               ✓
                             </Text>
                           ) : (
@@ -130,9 +134,13 @@ export function AvailabilityMatrix({ event, participations }: AvailabilityMatrix
                     <Table.Td
                       key={date}
                       ta="center"
-                      bg={isBest ? 'teal.2' : undefined}
+                      bg={isBest ? (isDark ? 'teal.8' : 'teal.2') : undefined}
                     >
-                      <Text size="sm" fw={isBest ? 700 : 500} c={isBest ? 'teal.8' : undefined}>
+                      <Text
+                        size="sm"
+                        fw={isBest ? 700 : 500}
+                        c={isBest ? (isDark ? 'teal.1' : 'teal.9') : undefined}
+                      >
                         {count}
                       </Text>
                     </Table.Td>
