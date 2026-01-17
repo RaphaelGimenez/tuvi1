@@ -2,16 +2,12 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import {
-  TextInput,
-  Textarea,
-  Button,
-  Stack,
-  Alert,
-  Text,
-} from '@mantine/core'
+import { TextInput, Textarea, Button, Stack, Alert, Text } from '@mantine/core'
 import { DatePicker } from '@mantine/dates'
 import dayjs from 'dayjs'
+import 'dayjs/locale/fr'
+
+dayjs.locale('fr')
 
 export function EventForm() {
   const router = useRouter()
@@ -32,7 +28,7 @@ export function EventForm() {
     setError(null)
 
     if (!name.trim()) {
-      setError('Le nom de l\'événement est requis')
+      setError("Le nom de l'événement est requis")
       return
     }
 
@@ -61,13 +57,13 @@ export function EventForm() {
 
       if (!res.ok) {
         const data = await res.json()
-        throw new Error(data.errors?.[0]?.message || 'Échec de la création de l\'événement')
+        throw new Error(data.errors?.[0]?.message || "Échec de la création de l'événement")
       }
 
       const { doc } = await res.json()
       router.push(`/e/${doc.slug}?created=true`)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Échec de la création de l\'événement')
+      setError(err instanceof Error ? err.message : "Échec de la création de l'événement")
     } finally {
       setLoading(false)
     }
@@ -113,7 +109,8 @@ export function EventForm() {
           />
           {selectedDates.length > 0 && (
             <Text size="sm" c="dimmed" mt="xs">
-              {selectedDates.length} date{selectedDates.length > 1 ? 's' : ''} sélectionnée{selectedDates.length > 1 ? 's' : ''}
+              {selectedDates.length} date{selectedDates.length > 1 ? 's' : ''} sélectionnée
+              {selectedDates.length > 1 ? 's' : ''}
             </Text>
           )}
         </div>

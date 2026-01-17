@@ -14,6 +14,9 @@ import {
   Text,
 } from '@mantine/core'
 import dayjs from 'dayjs'
+import 'dayjs/locale/fr'
+
+dayjs.locale('fr')
 
 interface VotingFormProps {
   eventId: number
@@ -31,13 +34,11 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
   const [success, setSuccess] = useState(false)
 
   // Sort dates for display
-  const sortedDates = [...dateOptions].sort(
-    (a, b) => new Date(a).getTime() - new Date(b).getTime()
-  )
+  const sortedDates = [...dateOptions].sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
 
   const handleDateToggle = (date: string) => {
     setSelectedDates((prev) =>
-      prev.includes(date) ? prev.filter((d) => d !== date) : [...prev, date]
+      prev.includes(date) ? prev.filter((d) => d !== date) : [...prev, date],
     )
   }
 
@@ -79,7 +80,7 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
 
       if (!res.ok) {
         const data = await res.json()
-        throw new Error(data.errors?.[0]?.message || 'Échec de l\'envoi du vote')
+        throw new Error(data.errors?.[0]?.message || "Échec de l'envoi du vote")
       }
 
       setSuccess(true)
@@ -88,7 +89,7 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
       setSelectedDates([])
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Échec de l\'envoi du vote')
+      setError(err instanceof Error ? err.message : "Échec de l'envoi du vote")
     } finally {
       setLoading(false)
     }
@@ -137,14 +138,16 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
                 Sélectionnez les dates où vous êtes disponible
               </Text>
               <Button variant="subtle" size="xs" onClick={handleSelectAll}>
-                {selectedDates.length === dateOptions.length ? 'Tout désélectionner' : 'Tout sélectionner'}
+                {selectedDates.length === dateOptions.length
+                  ? 'Tout désélectionner'
+                  : 'Tout sélectionner'}
               </Button>
             </Group>
             <Stack gap="xs">
               {sortedDates.map((date) => (
                 <Checkbox
                   key={date}
-                  label={dayjs(date).format('dddd, MMMM D, YYYY')}
+                  label={dayjs(date).format('dddd D MMMM YYYY')}
                   checked={selectedDates.includes(date)}
                   onChange={() => handleDateToggle(date)}
                 />

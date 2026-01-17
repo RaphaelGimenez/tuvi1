@@ -4,6 +4,9 @@ import { getPayload } from 'payload'
 import Link from 'next/link'
 import { Container, Title, Text, Paper, Stack, Group, Button, Badge, Anchor } from '@mantine/core'
 import dayjs from 'dayjs'
+import 'dayjs/locale/fr'
+
+dayjs.locale('fr')
 
 import config from '@/payload.config'
 
@@ -70,7 +73,7 @@ export default async function EventsPage() {
                       </Text>
                     )}
                     <Text size="xs" c="dimmed" mt="xs">
-                      Créé le {dayjs(event.createdAt).format('D MMM YYYY')} •{' '}
+                      Créé le {dayjs(event.createdAt).format('D MMMM YYYY')} •{' '}
                       {Array.isArray(event.dateOptions) ? event.dateOptions.length : 0} options de
                       date
                     </Text>

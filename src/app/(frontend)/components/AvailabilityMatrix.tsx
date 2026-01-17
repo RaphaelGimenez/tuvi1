@@ -2,6 +2,9 @@
 
 import { Table, Text, Badge, Paper, Stack, Group, useComputedColorScheme } from '@mantine/core'
 import dayjs from 'dayjs'
+import 'dayjs/locale/fr'
+
+dayjs.locale('fr')
 import type { Event, EventParticipation } from '@/payload-types'
 
 interface AvailabilityMatrixProps {
@@ -41,9 +44,7 @@ export function AvailabilityMatrix({ event, participations }: AvailabilityMatrix
   const maxVotes = Math.max(...Object.values(voteCounts), 0)
 
   // Sort dates
-  const sortedDates = [...dateOptions].sort(
-    (a, b) => new Date(a).getTime() - new Date(b).getTime()
-  )
+  const sortedDates = [...dateOptions].sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
 
   if (participations.length === 0) {
     return (
@@ -53,7 +54,7 @@ export function AvailabilityMatrix({ event, participations }: AvailabilityMatrix
           <Group gap="xs" wrap="wrap">
             {sortedDates.map((date) => (
               <Badge key={date} variant="light" size="lg">
-                {dayjs(date).format('ddd D MMM')}
+                {dayjs(date).format('ddd D MMMM')}
               </Badge>
             ))}
           </Group>
@@ -78,7 +79,7 @@ export function AvailabilityMatrix({ event, participations }: AvailabilityMatrix
                   <Table.Th key={date} ta="center" style={{ minWidth: 80 }}>
                     <Text size="xs">{dayjs(date).format('ddd')}</Text>
                     <Text size="sm" fw={500}>
-                      {dayjs(date).format('MMM D')}
+                      {dayjs(date).format('D MMM')}
                     </Text>
                   </Table.Th>
                 ))}
@@ -155,13 +156,14 @@ export function AvailabilityMatrix({ event, participations }: AvailabilityMatrix
         {maxVotes > 0 && (
           <Group gap="xs">
             <Text size="sm" fw={500}>
-              Meilleure{sortedDates.filter((d) => voteCounts[d] === maxVotes).length > 1 ? 's' : ''} date{sortedDates.filter((d) => voteCounts[d] === maxVotes).length > 1 ? 's' : ''} :
+              Meilleure{sortedDates.filter((d) => voteCounts[d] === maxVotes).length > 1 ? 's' : ''}{' '}
+              date{sortedDates.filter((d) => voteCounts[d] === maxVotes).length > 1 ? 's' : ''} :
             </Text>
             {sortedDates
               .filter((d) => voteCounts[d] === maxVotes)
               .map((date) => (
                 <Badge key={date} color="teal">
-                  {dayjs(date).format('ddd D MMM')} ({maxVotes} vote{maxVotes > 1 ? 's' : ''})
+                  {dayjs(date).format('ddd D MMMM')} ({maxVotes} vote{maxVotes > 1 ? 's' : ''})
                 </Badge>
               ))}
           </Group>
