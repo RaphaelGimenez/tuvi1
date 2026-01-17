@@ -49,7 +49,7 @@ export default async function HomePage() {
         <SimpleGrid cols={{ base: 1, sm: 3 }} spacing="lg" mt="xl">
           <Paper p="lg" withBorder>
             <Stack gap="xs">
-              <ThemeIcon size="lg" variant="light" color="blue">
+              <ThemeIcon size="lg" variant="light" color="pink">
                 1
               </ThemeIcon>
               <Text fw={500}>Create Event</Text>
@@ -61,7 +61,7 @@ export default async function HomePage() {
 
           <Paper p="lg" withBorder>
             <Stack gap="xs">
-              <ThemeIcon size="lg" variant="light" color="teal">
+              <ThemeIcon size="lg" variant="light" color="grape">
                 2
               </ThemeIcon>
               <Text fw={500}>Share Link</Text>
@@ -73,7 +73,7 @@ export default async function HomePage() {
 
           <Paper p="lg" withBorder>
             <Stack gap="xs">
-              <ThemeIcon size="lg" variant="light" color="green">
+              <ThemeIcon size="lg" variant="light" color="violet">
                 3
               </ThemeIcon>
               <Text fw={500}>Find Best Time</Text>

@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { TextInput, Button, Group, CopyButton, Text, Paper, Stack } from '@mantine/core'
 
 interface ShareLinkProps {
@@ -20,7 +19,7 @@ export function ShareLink({ slug }: ShareLinkProps) {
           <TextInput value={url} readOnly style={{ flex: 1 }} />
           <CopyButton value={url}>
             {({ copied, copy }) => (
-              <Button color={copied ? 'teal' : 'blue'} onClick={copy}>
+              <Button color={copied ? 'green' : 'pink'} onClick={copy}>
                 {copied ? 'Copied!' : 'Copy'}
               </Button>
             )}

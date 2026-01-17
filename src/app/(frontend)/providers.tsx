@@ -4,7 +4,7 @@ import { MantineProvider, createTheme } from '@mantine/core'
 import { DatesProvider } from '@mantine/dates'
 
 const theme = createTheme({
-  primaryColor: 'teal',
+  primaryColor: 'pink',
   defaultRadius: 'md',
 })
 
