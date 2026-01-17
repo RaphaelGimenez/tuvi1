@@ -9,7 +9,7 @@ export const EventParticipations: CollectionConfig = {
   access: {
     read: () => true,
     create: () => true, // Anonymous voting allowed
-    update: () => false, // No updates allowed
+    update: () => true, // Allow anyone to update (anonymous editing)
     delete: () => false, // No deletes allowed
   },
   fields: [

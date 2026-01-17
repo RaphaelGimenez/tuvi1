@@ -1,7 +1,15 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import { useForm } from '@mantine/form'
+import { useDebouncedCallback } from '@mantine/hooks'
+import { zodResolver } from 'mantine-form-zod-resolver'
+import { z } from 'zod'
+import { PayloadSDK } from '@payloadcms/sdk'
+import dayjs from 'dayjs'
+import 'dayjs/locale/fr'
+import type { Config } from '@/payload-types'
 import {
   TextInput,
   Textarea,
@@ -13,8 +21,6 @@ import {
   Paper,
   Text,
 } from '@mantine/core'
-import dayjs from 'dayjs'
-import 'dayjs/locale/fr'
 
 dayjs.locale('fr')
 
@@ -24,69 +30,132 @@ interface VotingFormProps {
   disabled?: boolean
 }
 
+const formSchema = z.object({
+  name: z.string().min(1, 'Veuillez entrer votre nom').max(100),
+  comment: z.string().max(500).optional(),
+  dates: z.array(z.string()).min(1, 'Veuillez sélectionner au moins une date'),
+})
+
+type FormValues = z.infer<typeof formSchema>
+
 export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) {
   const router = useRouter()
-  const [name, setName] = useState('')
-  const [comment, setComment] = useState('')
-  const [selectedDates, setSelectedDates] = useState<string[]>([])
+
+  // UI state
   const [loading, setLoading] = useState(false)
+  const [checkingExisting, setCheckingExisting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
 
-  // Sort dates for display
-  const sortedDates = [...dateOptions].sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
+  // Edit mode state
+  const [existingParticipationId, setExistingParticipationId] = useState<number | null>(null)
+  const isEditing = existingParticipationId !== null
+
+  const sdk = useMemo(() => new PayloadSDK<Config>({ baseURL: '/api' }), [])
+
+  const form = useForm({
+    mode: 'uncontrolled',
+    initialValues: {
+      name: '',
+      comment: '',
+      dates: [] as string[],
+    },
+    validate: zodResolver(formSchema),
+  })
+
+  const sortedDates = useMemo(
+    () => [...dateOptions].sort((a, b) => new Date(a).getTime() - new Date(b).getTime()),
+    [dateOptions],
+  )
+
+  const resetEditMode = () => {
+    setExistingParticipationId(null)
+    form.setFieldValue('dates', [])
+    form.setFieldValue('comment', '')
+  }
+
+  const loadExistingParticipation = (existing: {
+    id: number
+    selectedDates: unknown
+    comment?: string | null
+  }) => {
+    setExistingParticipationId(existing.id)
+    form.setFieldValue('dates', (existing.selectedDates as string[]) || [])
+    form.setFieldValue('comment', existing.comment || '')
+  }
+
+  const checkExistingParticipation = useDebouncedCallback(async (name: string) => {
+    const trimmedName = name.trim()
+
+    if (!trimmedName || trimmedName.length < 2) {
+      resetEditMode()
+      return
+    }
+
+    setCheckingExisting(true)
+    try {
+      const result = await sdk.find({
+        collection: 'event-participations',
+        where: {
+          and: [{ event: { equals: eventId } }, { participantName: { equals: trimmedName } }],
+        },
+        limit: 1,
+      })
+
+      if (result.docs?.[0]) {
+        loadExistingParticipation(result.docs[0])
+      } else {
+        resetEditMode()
+      }
+    } catch (err) {
+      console.error('Error checking existing participation:', err)
+    } finally {
+      setCheckingExisting(false)
+    }
+  }, 500)
+
+  form.watch('name', ({ value }) => checkExistingParticipation(value))
 
   const handleDateToggle = (date: string) => {
-    setSelectedDates((prev) =>
-      prev.includes(date) ? prev.filter((d) => d !== date) : [...prev, date],
-    )
+    const currentDates = form.getValues().dates
+    const newDates = currentDates.includes(date)
+      ? currentDates.filter((d) => d !== date)
+      : [...currentDates, date]
+    form.setFieldValue('dates', newDates)
   }
 
   const handleSelectAll = () => {
-    if (selectedDates.length === dateOptions.length) {
-      setSelectedDates([])
-    } else {
-      setSelectedDates([...dateOptions])
-    }
+    const allSelected = form.getValues().dates.length === dateOptions.length
+    form.setFieldValue('dates', allSelected ? [] : [...dateOptions])
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (values: FormValues) => {
     setError(null)
-
-    if (!name.trim()) {
-      setError('Veuillez entrer votre nom')
-      return
-    }
-
-    if (selectedDates.length === 0) {
-      setError('Veuillez sélectionner au moins une date')
-      return
-    }
-
     setLoading(true)
 
     try {
-      const res = await fetch('/api/event-participations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          event: eventId,
-          participantName: name.trim(),
-          selectedDates,
-          comment: comment.trim() || undefined,
-        }),
-      })
+      const participationData = {
+        event: eventId,
+        participantName: values.name.trim(),
+        selectedDates: values.dates,
+        comment: values.comment?.trim() || undefined,
+      }
 
-      if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.errors?.[0]?.message || "Échec de l'envoi du vote")
+      if (existingParticipationId) {
+        await sdk.update({
+          collection: 'event-participations',
+          id: existingParticipationId,
+          data: participationData,
+        })
+      } else {
+        await sdk.create({
+          collection: 'event-participations',
+          data: participationData,
+        })
       }
 
       setSuccess(true)
-      setName('')
-      setComment('')
-      setSelectedDates([])
+      if (!existingParticipationId) form.reset()
       router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : "Échec de l'envoi du vote")
@@ -107,9 +176,17 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
 
   return (
     <Paper p="md" withBorder>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack gap="md">
-          <Text fw={500}>Indiquez vos disponibilités</Text>
+          <Text fw={500}>
+            {isEditing ? 'Modifier vos disponibilités' : 'Indiquez vos disponibilités'}
+          </Text>
+
+          {isEditing && (
+            <Alert color="blue" title="Vote existant trouvé">
+              Vous avez déjà voté. Modifiez vos disponibilités ci-dessous.
+            </Alert>
+          )}
 
           {error && (
             <Alert color="red" title="Erreur">
@@ -119,7 +196,7 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
 
           {success && (
             <Alert color="green" title="Succès">
-              Votre réponse a été enregistrée !
+              {isEditing ? 'Votre vote a été mis à jour !' : 'Votre réponse a été enregistrée !'}
             </Alert>
           )}
 
@@ -128,8 +205,8 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
             placeholder="Jean Dupont"
             required
             maxLength={100}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            key={form.key('name')}
+            {...form.getInputProps('name')}
           />
 
           <div>
@@ -138,21 +215,28 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
                 Sélectionnez les dates où vous êtes disponible
               </Text>
               <Button variant="subtle" size="xs" onClick={handleSelectAll}>
-                {selectedDates.length === dateOptions.length
+                {form.getValues().dates.length === dateOptions.length
                   ? 'Tout désélectionner'
                   : 'Tout sélectionner'}
               </Button>
             </Group>
+
             <Stack gap="xs">
               {sortedDates.map((date) => (
                 <Checkbox
                   key={date}
                   label={dayjs(date).format('dddd D MMMM YYYY')}
-                  checked={selectedDates.includes(date)}
+                  checked={form.getValues().dates.includes(date)}
                   onChange={() => handleDateToggle(date)}
                 />
               ))}
             </Stack>
+
+            {form.errors.dates && (
+              <Text size="sm" c="red" mt="xs">
+                {form.errors.dates}
+              </Text>
+            )}
           </div>
 
           <Textarea
@@ -160,12 +244,12 @@ export function VotingForm({ eventId, dateOptions, disabled }: VotingFormProps) 
             placeholder="Notes sur vos disponibilités..."
             maxLength={500}
             rows={2}
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
+            key={form.key('comment')}
+            {...form.getInputProps('comment')}
           />
 
-          <Button type="submit" loading={loading} disabled={loading}>
-            Envoyer ma réponse
+          <Button type="submit" loading={loading || checkingExisting}>
+            {isEditing ? 'Mettre à jour mon vote' : 'Envoyer ma réponse'}
           </Button>
         </Stack>
       </form>
